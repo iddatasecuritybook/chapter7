@@ -20,15 +20,14 @@ msg = JSON.stringify(msg);
 
 //encrypt with recipient public key, and sign with sender private key
 var encrypted = recipientpubkey.encrypt(msg, 'utf8', 'base64');
-var signed = senderprivkey.hashAndSign('sha256', msg, 'utf8', 'base64');
-
-//decrypt message with recipient private key
-var decryptedmsg = recipientprivkey.decrypt(encrypted, 'base64', 'utf8');
+var signed = senderprivkey.hashAndSign('sha256', encrypted, 'utf8', 'base64');
 
 //verify message with sender private key
-bufferedmsg = new Buffer(decryptedmsg).toString('base64');
+bufferedmsg = new Buffer(encrypted).toString('base64');
 if (!senderpubkey.hashAndVerify('sha256', bufferedmsg, signed, 'base64')) {
     throw new Error("invalid signature");
 } else {
+    //decrypt message with recipient private key
+    var decryptedmsg = recipientprivkey.decrypt(encrypted, 'base64', 'utf8');
     console.log('decrypted message verified:', decryptedmsg);
 }
