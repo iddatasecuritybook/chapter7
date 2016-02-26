@@ -28,7 +28,7 @@ var encrypted = recipientpubkey.encrypt(msg, 'utf8', 'base64');
 var signed = senderprivkey.hashAndSign('sha256', encrypted, 'utf8', 'base64');
 
 //verify message with sender private key
-var bufferedmsg = new Buffer(encrypted).toString('base64');
+var bufferedmsg = new Buffer(encrypted);
 if (!senderpubkey.hashAndVerify('sha256', bufferedmsg, signed, 'base64')){
     throw new Error("invalid signature");
 } else {
